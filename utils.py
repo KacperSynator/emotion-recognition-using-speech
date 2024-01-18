@@ -3,7 +3,7 @@ import librosa
 import numpy as np
 import pickle
 import os
-from emotion_recognition_using_speech.convert_wavs import convert_audio
+from convert_wavs import convert_audio
 
 
 AVAILABLE_EMOTIONS = {

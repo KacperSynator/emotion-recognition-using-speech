@@ -1,6 +1,6 @@
-from emotion_recognition_using_speech.data_extractor import load_data
-from emotion_recognition_using_speech.utils import extract_feature, AVAILABLE_EMOTIONS
-from emotion_recognition_using_speech.create_csv import write_emodb_csv, write_tess_ravdess_csv, write_custom_csv
+from data_extractor import load_data
+from utils import extract_feature, AVAILABLE_EMOTIONS
+from create_csv import write_emodb_csv, write_tess_ravdess_csv, write_custom_csv
 
 from sklearn.metrics import accuracy_score, make_scorer, fbeta_score, mean_squared_error, mean_absolute_error
 from sklearn.metrics import confusion_matrix
@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 
 import matplotlib.pyplot as pl
 from time import time
-from emotion_recognition_using_speech.utils import get_best_estimators, get_audio_config
+from utils import get_best_estimators, get_audio_config
 import numpy as np
 import tqdm
 import os

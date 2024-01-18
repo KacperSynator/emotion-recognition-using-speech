@@ -13,10 +13,10 @@ from tensorflow.keras.utils import to_categorical
 
 from sklearn.metrics import accuracy_score, mean_absolute_error, confusion_matrix
 
-from emotion_recognition_using_speech.data_extractor import load_data
-from emotion_recognition_using_speech.create_csv import write_custom_csv, write_emodb_csv, write_tess_ravdess_csv
-from emotion_recognition_using_speech.emotion_recognition import EmotionRecognizer
-from emotion_recognition_using_speech.utils import get_first_letters, AVAILABLE_EMOTIONS, extract_feature, get_dropout_str
+from data_extractor import load_data
+from create_csv import write_custom_csv, write_emodb_csv, write_tess_ravdess_csv
+from emotion_recognition import EmotionRecognizer
+from utils import get_first_letters, AVAILABLE_EMOTIONS, extract_feature, get_dropout_str
 
 import numpy as np
 import pandas as pd
