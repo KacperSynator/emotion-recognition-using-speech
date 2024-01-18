@@ -61,43 +61,62 @@ def extract_feature(file_name, **kwargs):
     mel = kwargs.get("mel")
     contrast = kwargs.get("contrast")
     tonnetz = kwargs.get("tonnetz")
+    print(f"Extracting features from {file_name}...")
     try:
         with soundfile.SoundFile(file_name) as sound_file:
+            print("Sound file opened")
             pass
     except RuntimeError:
         # not properly formated, convert to 16000 sample rate & mono channel using ffmpeg
         # get the basename
+        print("Converting audio file to 16000 sample rate & mono channel using ffmpeg...")
         basename = os.path.basename(file_name)
+        print(basename)
         dirname  = os.path.dirname(file_name)
+        print(dirname)
         name, ext = os.path.splitext(basename)
+        print(name)
         new_basename = f"{name}_c.wav"
+        print(new_basename)
         new_filename = os.path.join(dirname, new_basename)
+        print(new_filename)
         v = convert_audio(file_name, new_filename)
+        print(v)
         if v:
             raise NotImplementedError("Converting the audio files failed, make sure `ffmpeg` is installed in your machine and added to PATH.")
     else:
+        print("Sound file is already in 16000 sample rate & mono channel")
         new_filename = file_name
     with soundfile.SoundFile(new_filename) as sound_file:
         X = sound_file.read(dtype="float32")
         sample_rate = sound_file.samplerate
+        print(f"Sample rate: {sample_rate}")
         if chroma or contrast:
+            print("Converting to mono channel...")
             stft = np.abs(librosa.stft(X))
         result = np.array([])
         if mfcc:
+            print("Extracting MFCC...")
             mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T, axis=0)
             result = np.hstack((result, mfccs))
         if chroma:
+            print("Extracting Chroma...")
             chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
             result = np.hstack((result, chroma))
         if mel:
+            print("Extracting MEL...")
             mel = np.mean(librosa.feature.melspectrogram(X, sr=sample_rate).T,axis=0)
             result = np.hstack((result, mel))
         if contrast:
+            print("Extracting Contrast...")
             contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T,axis=0)
             result = np.hstack((result, contrast))
         if tonnetz:
+            print("Extracting Tonnetz...")
             tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T,axis=0)
+            print(tonnetz.shape)
             result = np.hstack((result, tonnetz))
+            print(result.shape)
     return result
 
 

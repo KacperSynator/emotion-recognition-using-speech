@@ -1,26 +1,40 @@
 import os
+
 # disable keras loggings
 import sys
+
 stderr = sys.stderr
 sys.stderr = open(os.devnull, 'w')
-import tensorflow as tf
-
-from tensorflow.keras.layers import LSTM, GRU, Dense, Activation, LeakyReLU, Dropout
-from tensorflow.keras.layers import Conv1D, MaxPool1D, GlobalAveragePooling1D
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
-from tensorflow.keras.utils import to_categorical
-
-from sklearn.metrics import accuracy_score, mean_absolute_error, confusion_matrix
-
-from data_extractor import load_data
-from create_csv import write_custom_csv, write_emodb_csv, write_tess_ravdess_csv
-from emotion_recognition import EmotionRecognizer
-from utils import get_first_letters, AVAILABLE_EMOTIONS, extract_feature, get_dropout_str
+import random
 
 import numpy as np
 import pandas as pd
-import random
+import tensorflow as tf
+from sklearn.metrics import accuracy_score, confusion_matrix, mean_absolute_error
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+from tensorflow.keras.layers import (
+    GRU,
+    LSTM,
+    Activation,
+    Conv1D,
+    Dense,
+    Dropout,
+    GlobalAveragePooling1D,
+    LeakyReLU,
+    MaxPool1D,
+)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.utils import to_categorical
+
+from create_csv import write_custom_csv, write_emodb_csv, write_tess_ravdess_csv
+from data_extractor import load_data
+from emotion_recognition import EmotionRecognizer
+from utils import (
+    AVAILABLE_EMOTIONS,
+    extract_feature,
+    get_dropout_str,
+    get_first_letters,
+)
 
 
 class DeepEmotionRecognizer(EmotionRecognizer):
@@ -265,23 +279,35 @@ class DeepEmotionRecognizer(EmotionRecognizer):
             print("[+] Model trained")
 
     def predict(self, audio_path):
+        print(audio_path)
         feature = extract_feature(audio_path, **self.audio_config).reshape((1, 1, self.input_length))
+        print(feature)
         if self.classification:
+            print("classification")
             prediction = self.model.predict(feature)
+            print(prediction)
             prediction = np.argmax(np.squeeze(prediction))
+            print(prediction)
             return self.int2emotions[prediction]
         else:
+            print("regression")
             return np.squeeze(self.model.predict(feature))
 
     def predict_proba(self, audio_path):
+        print(audio_path)
         if self.classification:
+            print("classification")
             feature = extract_feature(audio_path, **self.audio_config).reshape((1, 1, self.input_length))
+            print(feature)
             proba = self.model.predict(feature)[0][0]
+            print(proba)
             result = {}
             for prob, emotion in zip(proba, self.emotions):
+                print(prob, emotion)
                 result[emotion] = prob
             return result
         else:
+            print("regression")
             raise NotImplementedError("Probability prediction doesn't make sense for regression")
 
 
