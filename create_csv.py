@@ -29,7 +29,9 @@ def write_emodb_csv(emotions=["sad", "neutral", "happy"], train_name="train_emo.
     for emotion, code in categories_reversed.items():
         if emotion not in emotions:
             del categories[code]
-    for file in glob.glob("data/emodb/wav/*.wav"):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(script_dir, "data", "emodb", "wav")
+    for file in glob.glob(f"{path}/*.wav"):
         try:
             emotion = categories[os.path.basename(file)[5]]
         except KeyError:
@@ -69,7 +71,9 @@ def write_tess_ravdess_csv(emotions=["sad", "neutral", "happy"], train_name="tra
     
     for category in emotions:
         # for training speech directory
-        total_files = glob.glob(f"data/training/Actor_*/*_{category}.wav")
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        path = os.path.join(script_dir, "data", "training")
+        total_files = glob.glob(f"{path}/Actor_*/*_{category}.wav")
         for i, path in enumerate(total_files):
             train_target["path"].append(path)
             train_target["emotion"].append(category)
@@ -77,7 +81,8 @@ def write_tess_ravdess_csv(emotions=["sad", "neutral", "happy"], train_name="tra
             print(f"[TESS&RAVDESS] There are {len(total_files)} training audio files for category:{category}")
     
         # for validation speech directory
-        total_files = glob.glob(f"data/validation/Actor_*/*_{category}.wav")
+        path = os.path.join(script_dir, "data", "validation")
+        total_files = glob.glob(f"{path}/Actor_*/*_{category}.wav")
         for i, path in enumerate(total_files):
             test_target["path"].append(path)
             test_target["emotion"].append(category)
@@ -101,7 +106,9 @@ def write_custom_csv(emotions=['sad', 'neutral', 'happy'], train_name="train_cus
     test_target = {"path": [], "emotion": []}
     for category in emotions:
         # train data
-        for i, file in enumerate(glob.glob(f"data/train-custom/*_{category}.wav")):
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        path = os.path.join(script_dir, "data", "train-custom")
+        for i, file in enumerate(glob.glob(f"{path}/*_{category}.wav")):
             train_target["path"].append(file)
             train_target["emotion"].append(category)
         if verbose:
@@ -112,7 +119,8 @@ def write_custom_csv(emotions=['sad', 'neutral', 'happy'], train_name="train_cus
                 pass
         
         # test data
-        for i, file in enumerate(glob.glob(f"data/test-custom/*_{category}.wav")):
+        path = os.path.join(script_dir, "data", "test-custom")
+        for i, file in enumerate(glob.glob(f"{path}/*_{category}.wav")):
             test_target["path"].append(file)
             test_target["emotion"].append(category)
         if verbose:
