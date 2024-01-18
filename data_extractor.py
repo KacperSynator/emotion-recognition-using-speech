@@ -5,7 +5,7 @@ import pickle
 import tqdm
 import os
 
-from utils import get_label, extract_feature, get_first_letters
+from emotion_recognition_using_speech.utils import get_label, extract_feature, get_first_letters
 from collections import defaultdict
 
 

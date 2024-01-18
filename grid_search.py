@@ -9,8 +9,8 @@ faster search )
 
 import pickle
 
-from emotion_recognition import EmotionRecognizer
-from parameters import classification_grid_parameters, regression_grid_parameters
+from emotion_recognition_using_speech.emotion_recognition import EmotionRecognizer
+from emotion_recognition_using_speech.parameters import classification_grid_parameters, regression_grid_parameters
 
 # emotion classes you want to perform grid search on
 emotions = ['sad', 'neutral', 'happy']
