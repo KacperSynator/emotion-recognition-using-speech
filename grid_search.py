@@ -8,6 +8,7 @@ faster search )
 """
 
 import pickle
+import os
 
 from emotion_recognition_using_speech.emotion_recognition import EmotionRecognizer
 from emotion_recognition_using_speech.parameters import classification_grid_parameters, regression_grid_parameters
@@ -31,7 +32,8 @@ for model, params in classification_grid_parameters.items():
     print(f"{emotions} {best_estimator.__class__.__name__} achieved {cv_best_score:.3f} cross validation accuracy score!")
 
 print(f"[+] Pickling best classifiers for {emotions}...")
-pickle.dump(best_estimators, open(f"grid/best_classifiers.pickle", "wb"))
+script_dir = os.path.dirname(os.path.realpath(__file__))
+pickle.dump(best_estimators, open(os.path.join(script_dir, "grid", "best_classifiers.pickle"), "wb"))
 
 best_estimators = []
 
@@ -47,7 +49,8 @@ for model, params in regression_grid_parameters.items():
     print(f"{emotions} {best_estimator.__class__.__name__} achieved {cv_best_score:.3f} cross validation MAE score!")
 
 print(f"[+] Pickling best regressors for {emotions}...")
-pickle.dump(best_estimators, open(f"grid/best_regressors.pickle", "wb"))
+script_dir = os.path.dirname(os.path.realpath(__file__))
+pickle.dump(best_estimators, open(os.path.join(script_dir, "grid", "regressors.pickle"), "wb"))
 
 
 
