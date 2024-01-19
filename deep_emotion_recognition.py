@@ -7,9 +7,10 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import LSTM, GRU, Dense, Activation, LeakyReLU, Dropout
 from tensorflow.keras.layers import Conv1D, MaxPool1D, GlobalAveragePooling1D
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras.utils import to_categorical
+
 
 from sklearn.metrics import accuracy_score, mean_absolute_error, confusion_matrix
 
@@ -227,20 +228,20 @@ class DeepEmotionRecognizer(EmotionRecognizer):
             override (bool): whether to override the previous identical model, can be used
                 when you changed the dataset, default is False
         """
+        model_name = self._model_exists()
+
+        # if the model already exists and override is False, just load the model and return
+        if not override and model_name:
+            self.model = load_model(model_name)
+            self.model_created = True
+            self.model_trained = True
+            if self.verbose > 0:
+                print("[*] Model loaded")
+            return
+
         # if model isn't created yet, create it
         if not self.model_created:
             self.create_model()
-
-        # if the model already exists and trained, just load the weights and return
-        # but if override is True, then just skip loading weights
-        if not override:
-            model_name = self._model_exists()
-            if model_name:
-                self.model.load_weights(model_name)
-                self.model_trained = True
-                if self.verbose > 0:
-                    print("[*] Model weights loaded")
-                return
         
         if not os.path.isdir("results"):
             os.mkdir("results")
